@@ -13,11 +13,29 @@
     <div class="page">
         <div class="page__hd" style="text-align: center">
             <h1 class="page__title">肾糖阈估算<a href="en.html" style="margin-left: 20px" class="weui-btn weui-btn_mini weui-btn_default">English</a></h1>
-            <p class="page__desc">请输入0-240min的尿液葡萄糖排出量(UGE)、估算的肾小球滤过率(eGFR)及对应时间点的血糖浓度，点击"计算"</p>
+            <p class="page__desc">请输入身高、体重、0-240min的尿液葡萄糖排出量(UGE)、估算的肾小球滤过率(eGFR)及对应时间点的血糖浓度，点击"计算"</p>
         </div>
         <div class="page__bd page__bd_spacing">
             <div id="form">
                 <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">身高(cm)</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="height" required placeholder="身高" emptyTips="请输入身高(厘米)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">体重(kg)</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="weight" required placeholder="体重" emptyTips="请输入体重(公斤)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
                     <div class="weui-cell">
                         <div class="weui-cell__hd"><label class="weui-label">UGE(mmol)</label></div>
                         <div class="weui-cell__bd">
@@ -116,6 +134,11 @@
         <div class="page__ft" style="text-align: center">
             <h2 id="result" class="page__desc"></h2>
         </div>
+        <div class="weui-footer weui-footer_fixed-bottom">
+            <p class="weui-footer__links">
+                <a href="https://github.com/cuckoohello/rtg" target="_blank" class="weui-footer__link">源代码</a>
+            </p>
+        </div>
     </div>
 </div>
 <script rel="script">
@@ -126,22 +149,26 @@
             console.log(error);
             if (!error) {
                 var loading = weui.loading('提交中...');
-                var uge = document.getElementById('uge').value;
-                var egfr = document.getElementById('egfr').value;
+                var uge = parseFloat(document.getElementById('uge').value);
+                var egfr = parseFloat(document.getElementById('egfr').value);
+                var height = parseFloat(document.getElementById('height').value);
+                var weight = parseFloat(document.getElementById('weight').value);
                 var blood = [];
-                blood.push(document.getElementById('blood0').value);
-                blood.push(document.getElementById('blood30').value);
-                blood.push(document.getElementById('blood60').value);
-                blood.push(document.getElementById('blood90').value);
-                blood.push(document.getElementById('blood120').value);
-                blood.push(document.getElementById('blood180').value);
-                blood.push(document.getElementById('blood240').value);
+                blood.push(parseFloat(document.getElementById('blood0').value));
+                blood.push(parseFloat(document.getElementById('blood30').value));
+                blood.push(parseFloat(document.getElementById('blood60').value));
+                blood.push(parseFloat(document.getElementById('blood90').value));
+                blood.push(parseFloat(document.getElementById('blood120').value));
+                blood.push(parseFloat(document.getElementById('blood180').value));
+                blood.push(parseFloat(document.getElementById('blood240').value));
                 fetch('/rtg', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        height: height,
+                        weight: weight,
                         gfr: egfr,
                         uge: uge,
                         x: [0.0,30.0,60.0,90.0,120.0,180.0,240.0],

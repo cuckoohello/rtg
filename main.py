@@ -30,14 +30,18 @@ def create_app():
 
     @app.route("/rtg", methods=["POST"])
     def post_rtg():
+        import math
         try:
-            gfr = float(request.json.get("gfr"))
-            uge = float(request.json.get("uge"))
+            gfr = request.json.get("gfr")
+            uge = request.json.get("uge")
+            height = request.json.get("height")
+            weight = request.json.get("weight")
+            uge = uge/math.sqrt(height*weight/3600)*1.73
             time = request.json.get("x")
-            blood_glucose = list(map(lambda x: float(x), request.json.get("y")))
+            blood_glucose = request.json.get("y")
             return jsonify(rtg(time=time, blood_glucose=blood_glucose, uge=uge, egfr = gfr/1000))
         except:
-            abort(400)
+            return jsonify([])
     
     @app.route("/")
     def index():

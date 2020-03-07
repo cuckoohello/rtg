@@ -13,11 +13,29 @@
     <div class="page">
         <div class="page__hd" style="text-align: center">
             <h1 class="page__title">Estimation of RTG<a href="index.html" style="margin-left: 20px" class="weui-btn weui-btn_mini weui-btn_default">中文</a></h1>
-            <p class="page__desc">Please input UGE(urinary glucose excretion from 0h to 4h), eGFR, and blood glucose levels at each time point. Then click 'Calculate'</p>
+            <p class="page__desc">Please input height, weight, UGE(urinary glucose excretion from 0h to 4h), eGFR, and blood glucose levels at each time point. Then click 'Calculate'</p>
         </div>
         <div class="page__bd page__bd_spacing">
             <div id="form">
                 <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">Height(cm)</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="height" required placeholder="Height" emptyTips="Please input height(cm)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">Weight(kg)</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="weight" required placeholder="Weight" emptyTips="Please input weight(kg)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
                     <div class="weui-cell">
                         <div class="weui-cell__hd"><label class="weui-label">UGE(mmol)</label></div>
                         <div class="weui-cell__bd">
@@ -116,6 +134,11 @@
         <div class="page__ft" style="text-align: center">
             <h2 id="result" class="page__desc"></h2>
         </div>
+        <div class="weui-footer weui-footer_fixed-bottom">
+            <p class="weui-footer__links">
+                <a href="https://github.com/cuckoohello/rtg" target="_blank" class="weui-footer__link">Source Code</a>
+            </p>
+        </div>
     </div>
 </div>
 <script rel="script">
@@ -126,22 +149,26 @@
             console.log(error);
             if (!error) {
                 var loading = weui.loading('Calculating...');
-                var uge = document.getElementById('uge').value;
-                var egfr = document.getElementById('egfr').value;
+                var uge = parseFloat(document.getElementById('uge').value);
+                var egfr = parseFloat(document.getElementById('egfr').value);
+                var height = parseFloat(document.getElementById('height').value);
+                var weight = parseFloat(document.getElementById('weight').value);
                 var blood = [];
-                blood.push(document.getElementById('blood0').value);
-                blood.push(document.getElementById('blood30').value);
-                blood.push(document.getElementById('blood60').value);
-                blood.push(document.getElementById('blood90').value);
-                blood.push(document.getElementById('blood120').value);
-                blood.push(document.getElementById('blood180').value);
-                blood.push(document.getElementById('blood240').value);
+                blood.push(parseFloat(document.getElementById('blood0').value));
+                blood.push(parseFloat(document.getElementById('blood30').value));
+                blood.push(parseFloat(document.getElementById('blood60').value));
+                blood.push(parseFloat(document.getElementById('blood90').value));
+                blood.push(parseFloat(document.getElementById('blood120').value));
+                blood.push(parseFloat(document.getElementById('blood180').value));
+                blood.push(parseFloat(document.getElementById('blood240').value));
                 fetch('/rtg', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        height: height,
+                        weight: weight,
                         gfr: egfr,
                         uge: uge,
                         x: [0.0,30.0,60.0,90.0,120.0,180.0,240.0],
