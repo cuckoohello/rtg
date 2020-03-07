@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Estimation of renal threshold for glucose</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"/>
+    <script rel="script" src="lib/weui.min.js"></script>
+    <script src="//cdn.bootcss.com/fetch/2.0.2/fetch.min.js"></script>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="page">
+        <div class="page__hd" style="text-align: center">
+            <h1 class="page__title">Estimation of RTG<a href="index.html" style="margin-left: 20px" class="weui-btn weui-btn_mini weui-btn_default">中文</a></h1>
+            <p class="page__desc">Please input UGE(urinary glucose excretion from 0h to 4h), eGFR, and blood glucose levels at each time point. Then click 'Calculate'</p>
+        </div>
+        <div class="page__bd page__bd_spacing">
+            <div id="form">
+                <div class="weui-cells weui-cells_form">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">UGE(mmol)</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="uge" required placeholder="UGE" emptyTips="Please input UGE">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">eGFR(mL/min/1.73m^2)</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="egfr" required placeholder="eGFR" emptyTips="Please input eGFR">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">Time</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <label class="weui-input">Blood glucose level(mmol/L)</label>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">0 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood0" required placeholder="Blood glucose level(0min)" emptyTips="Blood glucose level(0min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">30 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood30" required placeholder="Blood glucose level(30min)" emptyTips="Blood glucose level(30min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">60 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood60" required placeholder="Blood glucose level(60min)" emptyTips="Blood glucose level(60min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">90 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood90" required placeholder="Blood glucose level(90min)" emptyTips="Blood glucose level(90min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">120 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood120" required placeholder="Blood glucose level(120min)" emptyTips="Blood glucose level(120min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">180 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood180" required placeholder="Blood glucose level(180min)" emptyTips="Blood glucose level(180min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd"><label class="weui-label">240 min</label></div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" id="blood240" required placeholder="Blood glucose level(240min)" emptyTips="Blood glucose level(240min)">
+                        </div>
+                        <div class="weui-cell__ft">
+                            <i class="weui-icon-warn"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-btn-area">
+                    <a id="formSubmitBtn" href="javascript:" class="weui-btn weui-btn_primary">Calculate</a>
+                </div>
+            </div>
+        </div>
+        <div class="page__ft" style="text-align: center">
+            <h2 id="result" class="page__desc"></h2>
+        </div>
+    </div>
+</div>
+<script rel="script">
+    weui.form.checkIfBlur('#form');
+
+    document.querySelector('#formSubmitBtn').addEventListener('click', function () {
+        weui.form.validate('#form', function (error) {
+            console.log(error);
+            if (!error) {
+                var loading = weui.loading('Calculating...');
+                var uge = document.getElementById('uge').value;
+                var egfr = document.getElementById('egfr').value;
+                var blood = [];
+                blood.push(document.getElementById('blood0').value);
+                blood.push(document.getElementById('blood30').value);
+                blood.push(document.getElementById('blood60').value);
+                blood.push(document.getElementById('blood90').value);
+                blood.push(document.getElementById('blood120').value);
+                blood.push(document.getElementById('blood180').value);
+                blood.push(document.getElementById('blood240').value);
+                fetch('/rtg', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        gfr: egfr,
+                        uge: uge,
+                        x: [0.0,30.0,60.0,90.0,120.0,180.0,240.0],
+                        y: blood
+                    })
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (json) {
+                    if (json.length != 1) {
+                        document.getElementById('result').innerHTML="Calculate Error!";
+                    } else {
+                        document.getElementById('result').innerHTML="Estimated RTG:"+new Number(json[0]).toFixed(2)+"mmol/L";
+                    }
+                    window.scrollTo(0,document.body.scrollHeight);
+                    loading.hide();
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
