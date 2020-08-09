@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Estimation of renal threshold for glucose</title>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=0"
+    />
+    <link
+      rel="stylesheet"
+      href="https://res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"
+    />
+    <script
+      rel="script"
+      src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"
+    ></script>
+    <script src="https://cdn.bootcss.com/fetch/2.0.2/fetch.min.js"></script>
+    <style>
+      .label-input {
+        width: 35%;
+      }
+    </style>
+  </head>
+  <body ontouchstart>
+    <div class="container">
+      <div class="page">
+        <div class="page__hd" style="text-align: center;">
+          <h1 class="page__title">
+            Estimation of RTG<a
+              href="zh.html"
+              style="margin-left: 20px;"
+              class="weui-btn weui-btn_mini weui-btn_default"
+              >中文</a
+            >
+          </h1>
+          <p class="page__desc">
+            Please input height, weight, UGE<sub>240min</sub>(urinary glucose
+            excretion from 0h to 4h), eGFR, and plasma glucose levels at each
+            time point. Then click 'Calculate'
+          </p>
+        </div>
+        <div class="page__bd page__bd_spacing">
+          <div id="form">
+            <div class="weui-cells weui-cells_form" id="form-container">
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">Height(cm)</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number"
+                    id="height"
+                    required
+                    placeholder="Height"
+                    emptyTips="Please input height(cm)"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">Weight(kg)</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number"
+                    id="weight"
+                    required
+                    placeholder="Weight"
+                    emptyTips="Please input weight(kg)"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">UGE<sub>240min</sub></label>
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number"
+                    id="uge"
+                    required
+                    placeholder="UGE"
+                    emptyTips="Please input UGE"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+                <div
+                  class="weui-cell_select"
+                  style="display: flex; align-items: center;"
+                >
+                  <div class="weui-cell__hd">
+                    <label for="">unit</label>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <select class="weui-select" id="ugeUnit" name="select">
+                      <option value="mmol">mmol</option>
+                      <option value="g">g</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label"
+                    >eGFR(mL/min/1.73m<sup>2</sup>)</label
+                  >
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number"
+                    id="egfr"
+                    required
+                    placeholder="eGFR"
+                    emptyTips="Please input eGFR"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">Time</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <label class="weui-input">Plasma glucose level</label>
+                </div>
+                <div
+                  class="weui-cell_select"
+                  style="display: flex; align-items: center;"
+                >
+                  <div class="weui-cell__hd">
+                    <label for="">unit</label>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <select class="weui-select" id="gfrUnit" name="select">
+                      <option value="mmol/L">mmol/L</option>
+                      <option value="mg/dl">mg/dl</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="time-row">
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number"
+                          value="0"
+                          emptyTips="Plasma glucose level(30min)"
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number"
+                      placeholder="Plasma glucose level(0min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <label class="weui-label">
+                      <input
+                        class="weui-input label-input"
+                        type="number"
+                        style="width: 35%;"
+                        value="30"
+                        emptyTips="Plasma glucose level(30min)"
+                      />
+                      min
+                    </label>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number"
+                      placeholder="Plasma glucose level(30min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <label class="weui-label">
+                      <input
+                        class="weui-input label-input"
+                        type="number"
+                        value="60"
+                      />
+                      min
+                    </label>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number"
+                      placeholder="Plasma glucose level(30min)"
+                      emptyTips="Plasma glucose level(30min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="weui-btn-area" onclick="addRow()">
+              <a
+                id="addRow"
+                href="javascript:"
+                class="weui-btn weui-btn_primary"
+                >add-row</a
+              >
+            </div>
+            <div class="weui-btn-area">
+              <a
+                id="formSubmitBtn"
+                href="javascript:"
+                class="weui-btn weui-btn_primary"
+                >Calculate</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="weui-footer">
+          <p class="weui-footer__links">
+            <a
+              href="https://rtg.renaltubule.com"
+              target="_blank"
+              class="weui-footer__link"
+              >Powered by Chen Lab @PUMCH</a
+            >
+            <a
+              href="Protocol and data collection sheet for determination of renal threshold for glucose.pdf"
+              target="_blank"
+              class="weui-footer__link"
+              >Protocol and data collection sheet</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script rel="script">
+      weui.form.checkIfBlur('#form');
+
+      var addRow = () => {
+        //创建行容器
+        var newWeUiCell = document.createElement('div');
+        newWeUiCell.setAttribute('class', 'weui-cell');
+        //创建label及time input
+        var newWeUiCellHd1 = document.createElement('div');
+        newWeUiCellHd1.setAttribute('class', 'weui-cell__hd');
+        var newWeUiCellLabel = document.createElement('label');
+        newWeUiCellLabel.setAttribute('class', 'weui-label');
+        var newWeUiCellInput1 = document.createElement('input');
+        newWeUiCellInput1.setAttribute('class', 'weui-input label-input');
+        newWeUiCellInput1.setAttribute('placeholder', 'time');
+        newWeUiCellInput1.setAttribute('type', 'number');
+        var text = document.createTextNode('min');
+        newWeUiCellLabel.appendChild(newWeUiCellInput1);
+        newWeUiCellLabel.appendChild(text);
+        newWeUiCellHd1.appendChild(newWeUiCellLabel);
+        //创建gfr input
+        var newWeUiCellHd2 = document.createElement('div');
+        newWeUiCellHd2.setAttribute('class', 'weui-cell__bd');
+        var newWeUiCellInput2 = document.createElement('input');
+        newWeUiCellInput2.setAttribute('class', 'weui-input blood-input');
+        newWeUiCellInput2.setAttribute('type', 'number');
+        newWeUiCellInput2.setAttribute('placeholder', 'Plasma glucose level');
+        newWeUiCellInput2.setAttribute('emptyTips', 'Plasma glucose level');
+        newWeUiCellHd2.appendChild(newWeUiCellInput2);
+
+        newWeUiCell.appendChild(newWeUiCellHd1);
+        newWeUiCell.appendChild(newWeUiCellHd2);
+        document.getElementById('time-row').appendChild(newWeUiCell);
+      };
+
+      var displayImage = (url) => {
+        var imageDiv = document.getElementById('image-div');
+        if (!imageDiv) {
+          //如果没有图片容器，开始新建图片容器， 图片容器分外层和内层，这样容易控制内层居中
+          var formContainer = document.getElementById('form-container');
+          var imageDiv = document.createElement('div');
+          imageDiv.style.width = '100%'; //可改外层容器宽度
+          imageDiv.style.height = '100px'; //可改外层容器高度
+          imageDiv.style.display = 'flex'; //让内层容器居中
+          imageDiv.style.alignItems = 'center';
+          imageDiv.style.justifyContent = 'center';
+          var imageContainer = document.createElement('div'); //创建内层容器
+          imageContainer.setAttribute('id', 'image-div');
+          imageContainer.style.width = '80px'; //设置内层容器宽度
+          imageContainer.style.height = '80px'; //设置内层容器高度
+          imageContainer.style.backgroundImage = 'url(' + url + ')'; //设置图片路径
+          imageDiv.appendChild(imageContainer);
+          formContainer.appendChild(imageDiv);
+        } else {
+          imageDiv.style.backgroundImage = 'url(' + url + ')'; //设置图片路径
+        }
+      };
+
+      document
+        .querySelector('#formSubmitBtn')
+        .addEventListener('click', function () {
+          console.log('111', weui.form);
+          weui.form.validate('#form', function (error) {
+            console.log(error);
+            if (!error) {
+              //收集time和glucose数据,手动处理错误，其他错误交给weui托管
+              var blood = [];
+              var time = [];
+              var bloodList = document.querySelectorAll('.label-input');
+              var timeList = document.querySelectorAll('.blood-input');
+              for (let i = 0; i < bloodList.length; i++) {
+                if (bloodList[i].value) {
+                  blood.push(parseFloat(bloodList[i].value));
+                }
+              }
+              for (let j = 0; j < timeList.length; j++) {
+                if (timeList[j].value) {
+                  time.push(parseFloat(timeList[j].value));
+                }
+              }
+              //如果以上数据有空值，返回错误提示
+              if (
+                blood.length !== time.length ||
+                blood.length !== bloodList.length ||
+                time.length !== timeList.length
+              ) {
+                weui.topTips('Time or plasma glucose level error', {
+                  duration: 3000,
+                  className: 'blood-err-tip',
+                  callback: function () {
+                    console.log('Time', time);
+                    console.log('blood', blood);
+                  },
+                });
+                return false;
+              }
+              //通过检测，向后端发送数据，并展示loading状态
+              var loading = weui.loading('Calculating...');
+              var uge = parseFloat(document.getElementById('uge').value);
+              var egfr = parseFloat(document.getElementById('egfr').value);
+              var height = parseFloat(document.getElementById('height').value);
+              var weight = parseFloat(document.getElementById('weight').value);
+              var ugeUnit = document.getElementById('ugeUnit').value;
+              var gfrUnit = document.getElementById('gfrUnit').value;
+              fetch('https://rtg.renaltubule.com/rtg', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  height: height,
+                  weight: weight,
+                  gfr: egfr,
+                  gfrUnit: gfrUnit,
+                  ugeUnit: ugeUnit,
+                  uge: uge,
+                  x: time,
+                  y: blood,
+                }),
+              })
+                .then(function (response) {
+                  return response.json();
+                })
+                .then(function (json) {
+                  if (json.length != 1) {
+                    document.getElementById('result').innerHTML =
+                      'Calculate Error!';
+                  } else {
+                    var { imageUrl, result } = json; //此处假设数据为可解析obj,假设result为带单位的字符串；
+                    displayImage(imageUrl); //显示后端返回图片
+                    document.getElementById('result').innerHTML =
+                      'Estimated RTG:' + result;
+                  }
+                  window.scrollTo(0, document.body.scrollHeight);
+                  loading.hide();
+                });
+            }
+          });
+        });
+    </script>
+  </body>
+</html>
