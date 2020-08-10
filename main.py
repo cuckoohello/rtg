@@ -1,8 +1,30 @@
 from typing import List
+import tempfile
 
-def rtg(time: List, blood_glucose: List,  uge: float, egfr: float, h_step: float = 0.01, v_step: float = 0.005):
+import matplotlib as mpl
+mpl.use("Agg")
+
+import matplotlib.pyplot as plt
+
+def rtg(time: List, blood_glucose: List,  uge: float, egfr: float, uge_unit: str = "mmol", gfr_unit: str = "mmol/L", h_step: float = 0.01, v_step: float = 0.005):
     import numpy as np
     from scipy.interpolate import interp1d
+
+    if uge_unit == 'g':
+        uge = uge*5.551 # 1g = 5.551mmol
+    elif uge_unit != 'mmol':
+        raise Exception(f"{uge_unit} is not a valid uge unit")
+
+    if gfr_unit == 'mg/dl':
+        uge = uge / 0.05551
+    elif gfr_unit != 'mmol/L':
+        raise Exception(f"{gfr_unit} is not a vlid gfr unit")
+
+    # if gfr_unit == 'mg/dl':
+    #     blood_glucose = [ blood*0.05551 for blood in blood_glucose]
+    # elif gfr_unit != 'mmol/L':
+    #     raise Exception(f"{gfr_unit} is not a vlid gfr unit")
+
     f = interp1d(time, blood_glucose, kind='cubic')
     x, h_step = np.linspace(min(time), max(time), num=int((max(time)-min(time))/h_step+1), endpoint=True, retstep=True)
     y = f(x)
@@ -22,7 +44,27 @@ def rtg(time: List, blood_glucose: List,  uge: float, egfr: float, h_step: float
         
         last = area
     
-    return results
+    # if gfr_unit == 'mg/dl':
+    #     results = [value/0.05551 for value in results]
+
+    if len(results) != 1:
+        return []
+
+    filename = f"static/imgs/{next(tempfile._get_candidate_names())}.png"
+
+    fig, ax = plt.subplots( nrows=1, ncols=1 )  # create figure & 1 axis
+    ax.plot(x, y, color='orange')
+    ax.plot(time, blood_glucose, 'o')
+    ax.axhline(y=results[0], color='g', linestyle='-', label='rtg')
+    ax.annotate(F"RTG={round(results[0], 1)}{gfr_unit}", xy=(50, results[0]-0.4))
+    ax.set(xlabel='time(min)', ylabel=f'BG({gfr_unit})')
+    ax.set_xlim(0, np.max(time))
+
+    fig.savefig(filename)   # save the figure to file
+    plt.close(fig)    # close the figure window
+
+    return [{"value": results[0], "url": filename}]
+
 
 def create_app():
     from flask import Flask, request, jsonify, abort, send_from_directory
@@ -39,7 +81,9 @@ def create_app():
             uge = uge/math.sqrt(height*weight/3600)*1.73
             time = request.json.get("x")
             blood_glucose = request.json.get("y")
-            return jsonify(rtg(time=time, blood_glucose=blood_glucose, uge=uge, egfr = gfr/1000))
+            uge_unit = request.json.get("ugeUnit")
+            gfr_unit = request.json.get("gfrUnit")
+            return jsonify(rtg(time=time, blood_glucose=blood_glucose, uge=uge, egfr = gfr/1000, uge_unit=uge_unit, gfr_unit=gfr_unit))
         except:
             return jsonify([])
     

@@ -9,16 +9,20 @@
     />
     <link
       rel="stylesheet"
-      href="https://res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"
+      href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"
     />
     <script
       rel="script"
-      src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"
+      src="//res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"
     ></script>
-    <script src="https://cdn.bootcss.com/fetch/2.0.2/fetch.min.js"></script>
+    <script src="//cdn.bootcss.com/fetch/2.0.2/fetch.min.js"></script>
     <style>
       .label-input {
         width: 35%;
+      }
+      .tool-bar{
+        display: flex;
+        justify-content: space-between;
       }
     </style>
   </head>
@@ -35,8 +39,8 @@
             >
           </h1>
           <p class="page__desc">
-            Please input height, weight, UGE<sub>240min</sub>(urinary glucose
-            excretion from 0h to 4h), eGFR, and plasma glucose levels at each
+            Please input height, weight, UGE<sub>0-end</sub>(urinary glucose
+            excretion from 0h to end time), eGFR, and plasma glucose levels at each
             time point. Then click 'Calculate'
           </p>
         </div>
@@ -81,7 +85,7 @@
               </div>
               <div class="weui-cell">
                 <div class="weui-cell__hd">
-                  <label class="weui-label">UGE<sub>240min</sub></label>
+                  <label class="weui-label">UGE<sub>0-end</sub></label>
                 </div>
                 <div class="weui-cell__bd">
                   <input
@@ -162,7 +166,7 @@
                           class="weui-input label-input"
                           type="number"
                           value="0"
-                          emptyTips="Plasma glucose level(30min)"
+                          readonly
                         />
                         min
                       </label>
@@ -186,8 +190,7 @@
                         class="weui-input label-input"
                         type="number"
                         style="width: 35%;"
-                        value="30"
-                        emptyTips="Plasma glucose level(30min)"
+                        placeholder="time"
                       />
                       min
                     </label>
@@ -196,7 +199,7 @@
                     <input
                       class="weui-input blood-input"
                       type="number"
-                      placeholder="Plasma glucose level(30min)"
+                      placeholder="Plasma glucose level"
                     />
                   </div>
                   <div class="weui-cell__ft">
@@ -209,7 +212,7 @@
                       <input
                         class="weui-input label-input"
                         type="number"
-                        value="60"
+                        placeholder="time"
                       />
                       min
                     </label>
@@ -218,8 +221,8 @@
                     <input
                       class="weui-input blood-input"
                       type="number"
-                      placeholder="Plasma glucose level(30min)"
-                      emptyTips="Plasma glucose level(30min)"
+                      placeholder="Plasma glucose level"
+                      emptyTips="Plasma glucose level"
                     />
                   </div>
                   <div class="weui-cell__ft">
@@ -227,15 +230,20 @@
                   </div>
                 </div>
               </div>
+                <div class="weui-cell tool-bar">
+                  <div class="weui-cell__hd">
+                    <a href="javascript:" class="weui-footer__link" onclick="addRow()">
+                      Add Row
+                    </a>
+                  </div>
+                  <div class="weui-cell__ft">
+                    <a href="index.html" class="weui-footer__link">
+                      Basic Mode
+                    </a>
+                  </div>
+                </div>
             </div>
-            <div class="weui-btn-area" onclick="addRow()">
-              <a
-                id="addRow"
-                href="javascript:"
-                class="weui-btn weui-btn_primary"
-                >add-row</a
-              >
-            </div>
+
             <div class="weui-btn-area">
               <a
                 id="formSubmitBtn"
@@ -245,6 +253,9 @@
               >
             </div>
           </div>
+        </div>
+        <div class="page__ft" id="page__ft" style="text-align: center">
+            <h2 id="result" class="page__desc"></h2>
         </div>
         <div class="weui-footer">
           <p class="weui-footer__links">
@@ -268,35 +279,41 @@
     <script rel="script">
       weui.form.checkIfBlur('#form');
 
+      var createElement = function(type, props) {
+        var $e = document.createElement(type);
+        for (var prop in props) {
+          $e.setAttribute(prop, props[prop]);
+        }
+        return $e;
+      }
+
+      var removeRow = (element) => {
+        element.parentElement.parentElement.parentElement.removeChild(element.parentElement.parentElement);
+      }
+
       var addRow = () => {
         //创建行容器
-        var newWeUiCell = document.createElement('div');
-        newWeUiCell.setAttribute('class', 'weui-cell');
+        var newWeUiCell = createElement('div', {class: 'weui-cell'});
         //创建label及time input
-        var newWeUiCellHd1 = document.createElement('div');
+        var newWeUiCellHd1 = createElement('div', {class: 'weui-cell__hd'});
         newWeUiCellHd1.setAttribute('class', 'weui-cell__hd');
-        var newWeUiCellLabel = document.createElement('label');
-        newWeUiCellLabel.setAttribute('class', 'weui-label');
-        var newWeUiCellInput1 = document.createElement('input');
-        newWeUiCellInput1.setAttribute('class', 'weui-input label-input');
-        newWeUiCellInput1.setAttribute('placeholder', 'time');
-        newWeUiCellInput1.setAttribute('type', 'number');
-        var text = document.createTextNode('min');
-        newWeUiCellLabel.appendChild(newWeUiCellInput1);
-        newWeUiCellLabel.appendChild(text);
+        var newWeUiCellLabel = createElement('label', {class: 'weui-label'});
+        newWeUiCellLabel.appendChild(createElement('input', {class: 'weui-input label-input', placeholder: 'time', type: 'number'}));
+        newWeUiCellLabel.appendChild(document.createTextNode('min'));
+
         newWeUiCellHd1.appendChild(newWeUiCellLabel);
         //创建gfr input
-        var newWeUiCellHd2 = document.createElement('div');
-        newWeUiCellHd2.setAttribute('class', 'weui-cell__bd');
-        var newWeUiCellInput2 = document.createElement('input');
-        newWeUiCellInput2.setAttribute('class', 'weui-input blood-input');
-        newWeUiCellInput2.setAttribute('type', 'number');
-        newWeUiCellInput2.setAttribute('placeholder', 'Plasma glucose level');
-        newWeUiCellInput2.setAttribute('emptyTips', 'Plasma glucose level');
-        newWeUiCellHd2.appendChild(newWeUiCellInput2);
+        var newWeUiCellHd2 = createElement('div', {class: 'weui-cell__bd'});
+
+        newWeUiCellHd2.appendChild(createElement('input', {class: 'weui-input blood-input', type: 'number', placeholder: 'Plasma glucose level', emptyTips: 'Plasma glucose level'}));
+
+        var newWeuiCellHd3 = createElement("div", {class: "weui-cell__ft"} );
+        newWeuiCellHd3.appendChild(createElement("i", {class: "weui-icon-cancel", onclick: "removeRow(this)"}));
+        newWeuiCellHd3.appendChild(createElement("i", {class: "weui-icon-warn"}));
 
         newWeUiCell.appendChild(newWeUiCellHd1);
         newWeUiCell.appendChild(newWeUiCellHd2);
+        newWeUiCell.appendChild(newWeuiCellHd3);
         document.getElementById('time-row').appendChild(newWeUiCell);
       };
 
@@ -304,17 +321,18 @@
         var imageDiv = document.getElementById('image-div');
         if (!imageDiv) {
           //如果没有图片容器，开始新建图片容器， 图片容器分外层和内层，这样容易控制内层居中
-          var formContainer = document.getElementById('form-container');
+          var formContainer = document.getElementById('page__ft');
           var imageDiv = document.createElement('div');
+          imageDiv.setAttribute('id', 'image-div-out');
           imageDiv.style.width = '100%'; //可改外层容器宽度
-          imageDiv.style.height = '100px'; //可改外层容器高度
+          imageDiv.style.height = '500px'; //可改外层容器高度
           imageDiv.style.display = 'flex'; //让内层容器居中
           imageDiv.style.alignItems = 'center';
           imageDiv.style.justifyContent = 'center';
           var imageContainer = document.createElement('div'); //创建内层容器
           imageContainer.setAttribute('id', 'image-div');
-          imageContainer.style.width = '80px'; //设置内层容器宽度
-          imageContainer.style.height = '80px'; //设置内层容器高度
+          imageContainer.style.width = '640px'; //设置内层容器宽度
+          imageContainer.style.height = '480px'; //设置内层容器高度
           imageContainer.style.backgroundImage = 'url(' + url + ')'; //设置图片路径
           imageDiv.appendChild(imageContainer);
           formContainer.appendChild(imageDiv);
@@ -326,15 +344,14 @@
       document
         .querySelector('#formSubmitBtn')
         .addEventListener('click', function () {
-          console.log('111', weui.form);
           weui.form.validate('#form', function (error) {
             console.log(error);
             if (!error) {
               //收集time和glucose数据,手动处理错误，其他错误交给weui托管
               var blood = [];
               var time = [];
-              var bloodList = document.querySelectorAll('.label-input');
-              var timeList = document.querySelectorAll('.blood-input');
+              var timeList = document.querySelectorAll('.label-input');
+              var bloodList = document.querySelectorAll('.blood-input');
               for (let i = 0; i < bloodList.length; i++) {
                 if (bloodList[i].value) {
                   blood.push(parseFloat(bloodList[i].value));
@@ -369,7 +386,7 @@
               var weight = parseFloat(document.getElementById('weight').value);
               var ugeUnit = document.getElementById('ugeUnit').value;
               var gfrUnit = document.getElementById('gfrUnit').value;
-              fetch('https://rtg.renaltubule.com/rtg', {
+              fetch('/rtg', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -392,11 +409,15 @@
                   if (json.length != 1) {
                     document.getElementById('result').innerHTML =
                       'Calculate Error!';
+                    var imageDivOut = document.getElementById("image-div-out");
+                    if(imageDivOut){
+                      document.getElementById('page__ft').removeChild(imageDivOut)
+                    }
                   } else {
-                    var { imageUrl, result } = json; //此处假设数据为可解析obj,假设result为带单位的字符串；
-                    displayImage(imageUrl); //显示后端返回图片
-                    document.getElementById('result').innerHTML =
-                      'Estimated RTG:' + result;
+                    var { value, url } = json[0];
+                    console.log(json);
+                    document.getElementById('result').innerHTML="Estimated RTG: "+new Number(value).toFixed(2)+gfrUnit;
+                    displayImage(url);
                   }
                   window.scrollTo(0, document.body.scrollHeight);
                   loading.hide();
