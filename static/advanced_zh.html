@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Estimation of renal threshold for glucose</title>
+    <title>肾糖阈估算</title>
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,user-scalable=0"
@@ -31,17 +31,15 @@
       <div class="page">
         <div class="page__hd" style="text-align: center;">
           <h1 class="page__title">
-            Estimation of RTG<a
-              href="zh.html"
+            肾糖阈估算<a
+              href="advanced.html"
               style="margin-left: 20px;"
               class="weui-btn weui-btn_mini weui-btn_default"
-              >中文</a
+              >English</a
             >
           </h1>
           <p class="page__desc">
-            Please input height, weight, UGE<sub>0-end</sub>(urinary glucose
-            excretion from 0h to end time), eGFR, and plasma glucose levels at each
-            time point. Then click 'Calculate'
+            请输入身高、体重、0-结束时间的尿液葡萄糖排出量(UGE<sub>0-end</sub>)、估算的肾小球滤过率(eGFR)及对应时间点的血糖浓度，点击"计算"
           </p>
         </div>
         <div class="page__bd page__bd_spacing">
@@ -49,7 +47,7 @@
             <div class="weui-cells weui-cells_form" id="form-container">
               <div class="weui-cell">
                 <div class="weui-cell__hd">
-                  <label class="weui-label">Height(cm)</label>
+                  <label class="weui-label">身高(cm)</label>
                 </div>
                 <div class="weui-cell__bd">
                   <input
@@ -57,8 +55,8 @@
                     type="number" step="any"
                     id="height"
                     required
-                    placeholder="Height"
-                    emptyTips="Please input height(cm)"
+                    placeholder="身高"
+                    emptyTips="请输入身高(cm)"
                   />
                 </div>
                 <div class="weui-cell__ft">
@@ -67,7 +65,7 @@
               </div>
               <div class="weui-cell">
                 <div class="weui-cell__hd">
-                  <label class="weui-label">Weight(kg)</label>
+                  <label class="weui-label">体重(kg)</label>
                 </div>
                 <div class="weui-cell__bd">
                   <input
@@ -75,8 +73,8 @@
                     type="number" step="any"
                     id="weight"
                     required
-                    placeholder="Weight"
-                    emptyTips="Please input weight(kg)"
+                    placeholder="体重"
+                    emptyTips="请输入体重(公斤)"
                   />
                 </div>
                 <div class="weui-cell__ft">
@@ -94,7 +92,7 @@
                     id="uge"
                     required
                     placeholder="UGE"
-                    emptyTips="Please input UGE"
+                    emptyTips="请输入UGE"
                   />
                 </div>
                 <div class="weui-cell__ft">
@@ -105,7 +103,7 @@
                   style="display: flex; align-items: center;"
                 >
                   <div class="weui-cell__hd">
-                    <label for="">unit</label>
+                    <label for="">单位</label>
                   </div>
                   <div class="weui-cell__bd">
                     <select class="weui-select" id="ugeUnit" name="select">
@@ -128,7 +126,7 @@
                     id="egfr"
                     required
                     placeholder="eGFR"
-                    emptyTips="Please input eGFR"
+                    emptyTips="请输入eGFR"
                   />
                 </div>
                 <div class="weui-cell__ft">
@@ -137,17 +135,17 @@
               </div>
               <div class="weui-cell">
                 <div class="weui-cell__hd">
-                  <label class="weui-label">Time</label>
+                  <label class="weui-label">时间</label>
                 </div>
                 <div class="weui-cell__bd">
-                  <label class="weui-input">Plasma glucose level</label>
+                  <label class="weui-input">血糖浓度</label>
                 </div>
                 <div
                   class="weui-cell_select"
                   style="display: flex; align-items: center;"
                 >
                   <div class="weui-cell__hd">
-                    <label for="">unit</label>
+                    <label for="">单位</label>
                   </div>
                   <div class="weui-cell__bd">
                     <select class="weui-select" id="gfrUnit" name="select">
@@ -176,7 +174,7 @@
                     <input
                       class="weui-input blood-input"
                       type="number" step="any"
-                      placeholder="Plasma glucose level(0min)"
+                      placeholder="血糖浓度(0min)"
                     />
                   </div>
                   <div class="weui-cell__ft">
@@ -190,7 +188,7 @@
                         class="weui-input label-input"
                         type="number" step="any"
                         style="width: 35%;"
-                        placeholder="time"
+                        placeholder="时间"
                       />
                       min
                     </label>
@@ -199,7 +197,7 @@
                     <input
                       class="weui-input blood-input"
                       type="number" step="any"
-                      placeholder="Plasma glucose level"
+                      placeholder="血糖浓度"
                     />
                   </div>
                   <div class="weui-cell__ft">
@@ -212,7 +210,7 @@
                       <input
                         class="weui-input label-input"
                         type="number" step="any"
-                        placeholder="time"
+                        placeholder="时间"
                       />
                       min
                     </label>
@@ -221,8 +219,8 @@
                     <input
                       class="weui-input blood-input"
                       type="number" step="any"
-                      placeholder="Plasma glucose level"
-                      emptyTips="Plasma glucose level"
+                      placeholder="血糖浓度"
+                      emptyTips="血糖浓度"
                     />
                   </div>
                   <div class="weui-cell__ft">
@@ -233,12 +231,12 @@
                 <div class="weui-cell tool-bar">
                   <div class="weui-cell__hd">
                     <a href="javascript:" class="weui-footer__link" onclick="addRow()">
-                      Add Row
+			    添加行
                     </a>
                   </div>
                   <div class="weui-cell__ft">
-                    <a href="index.html" class="weui-footer__link">
-                      Use Recommended timepoints
+                    <a href="zh.html" class="weui-footer__link">
+                      使用推荐的时间点
                     </a>
                   </div>
                 </div>
@@ -249,7 +247,7 @@
                 id="formSubmitBtn"
                 href="javascript:"
                 class="weui-btn weui-btn_primary"
-                >Calculate</a
+                >计算</a
               >
             </div>
           </div>
@@ -263,13 +261,13 @@
               href="https://rtg.renaltubule.com"
               target="_blank"
               class="weui-footer__link"
-              >Powered by Chen Lab @PUMCH</a
+              >本服务由北京协和医院 陈丽萌实验室提供</a
             >
             <a
-              href="Protocol and data collection sheet for determination of renal threshold for glucose.pdf"
+              href="肾糖阈测定流程及数据收集表.pdf"
               target="_blank"
               class="weui-footer__link"
-              >Protocol and data collection sheet</a
+              >测定流程及数据收集表格</a
             >
           </p>
         </div>
@@ -298,14 +296,14 @@
         var newWeUiCellHd1 = createElement('div', {class: 'weui-cell__hd'});
         newWeUiCellHd1.setAttribute('class', 'weui-cell__hd');
         var newWeUiCellLabel = createElement('label', {class: 'weui-label'});
-        newWeUiCellLabel.appendChild(createElement('input', {class: 'weui-input label-input', placeholder: 'time', type: 'number', step: 'any'}));
+        newWeUiCellLabel.appendChild(createElement('input', {class: 'weui-input label-input', placeholder: '时间', type: 'number', step: 'any'}));
         newWeUiCellLabel.appendChild(document.createTextNode('min'));
 
         newWeUiCellHd1.appendChild(newWeUiCellLabel);
         //创建gfr input
         var newWeUiCellHd2 = createElement('div', {class: 'weui-cell__bd'});
 
-        newWeUiCellHd2.appendChild(createElement('input', {class: 'weui-input blood-input', type: 'number', step: 'any', placeholder: 'Plasma glucose level', emptyTips: 'Plasma glucose level'}));
+        newWeUiCellHd2.appendChild(createElement('input', {class: 'weui-input blood-input', type: 'number', step: 'any', placeholder: '血糖浓度', emptyTips: '血糖浓度'}));
 
         var newWeuiCellHd3 = createElement("div", {class: "weui-cell__ft"} );
         newWeuiCellHd3.appendChild(createElement("i", {class: "weui-icon-cancel", onclick: "removeRow(this)"}));
@@ -368,7 +366,7 @@
                 blood.length !== bloodList.length ||
                 time.length !== timeList.length
               ) {
-                weui.topTips('Time or plasma glucose level error', {
+                weui.topTips('时间或血糖浓度有误', {
                   duration: 3000,
                   className: 'blood-err-tip',
                   callback: function () {
@@ -379,7 +377,7 @@
                 return false;
               }
               //通过检测，向后端发送数据，并展示loading状态
-              var loading = weui.loading('Calculating...');
+              var loading = weui.loading('提交中...');
               var uge = parseFloat(document.getElementById('uge').value);
               var egfr = parseFloat(document.getElementById('egfr').value);
               var height = parseFloat(document.getElementById('height').value);
@@ -408,7 +406,7 @@
                 .then(function (json) {
                   if (json.length != 1) {
                     document.getElementById('result').innerHTML =
-                      'Calculate Error!';
+                      '计算出错!';
                     var imageDivOut = document.getElementById("image-div-out");
                     if(imageDivOut){
                       document.getElementById('page__ft').removeChild(imageDivOut)
@@ -416,7 +414,7 @@
                   } else {
                     var { value, url } = json[0];
                     console.log(json);
-                    document.getElementById('result').innerHTML="Estimated RTG: "+new Number(value).toFixed(2)+gfrUnit;
+                    document.getElementById('result').innerHTML="肾糖阈估算值: "+new Number(value).toFixed(2)+gfrUnit;
                     displayImage(url);
                   }
                   window.scrollTo(0, document.body.scrollHeight);

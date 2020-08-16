@@ -56,7 +56,7 @@ def rtg(time: List, blood_glucose: List,  uge: float, egfr: float, uge_unit: str
     ax.plot(x, y, color='orange')
     ax.plot(time, blood_glucose, 'o')
     ax.axhline(y=results[0], color='g', linestyle='-', label='rtg')
-    ax.annotate(F"RTG={round(results[0], 1)}{gfr_unit}", xy=(50, results[0]-0.4))
+    ax.annotate(F"RTG={round(results[0], 2)}{gfr_unit}", xy=(50, results[0]-0.4))
     ax.set(xlabel='time(min)', ylabel=f'BG({gfr_unit})')
     ax.set_xlim(0, np.max(time))
 

@@ -1,194 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>肾糖阈估算</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"/>
-    <script rel="script" src="//res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=0"
+    />
+    <link
+      rel="stylesheet"
+      href="//res.wx.qq.com/open/libs/weui/1.1.1/weui.min.css"
+    />
+    <script
+      rel="script"
+      src="//res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"
+    ></script>
     <script src="//cdn.bootcss.com/fetch/2.0.2/fetch.min.js"></script>
-</head>
-<body ontouchstart>
-<div class="container">
-    <div class="page">
-        <div class="page__hd" style="text-align: center">
-            <h1 class="page__title">肾糖阈估算<a href="index.html" style="margin-left: 20px" class="weui-btn weui-btn_mini weui-btn_default">English</a></h1>
-            <p class="page__desc">请输入身高、体重、0-240min的尿液葡萄糖排出量(UGE<sub>240min</sub>)、估算的肾小球滤过率(eGFR)及对应时间点的血糖浓度，点击"计算"</p>
+    <style>
+      .label-input {
+        width: 45%;
+      }
+      .tool-bar{
+        display: flex;
+        justify-content: flex-end;
+      }
+    </style>
+  </head>
+  <body ontouchstart>
+    <div class="container">
+      <div class="page">
+        <div class="page__hd" style="text-align: center;">
+          <h1 class="page__title">
+            肾糖阈估算<a
+              href="index.html"
+              style="margin-left: 20px;"
+              class="weui-btn weui-btn_mini weui-btn_default"
+              >English</a
+            >
+          </h1>
+          <p class="page__desc">
+            请输入身高、体重、0-240min的尿液葡萄糖排出量(UGE<sub>240min</sub>)、估算的肾小球滤过率(eGFR)及对应时间点的血糖浓度，点击"计算"
+          </p>
         </div>
         <div class="page__bd page__bd_spacing">
-            <div id="form">
-                <div class="weui-cells weui-cells_form">
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">身高(cm)</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="height" required placeholder="身高" emptyTips="请输入身高(厘米)">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">体重(kg)</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="weight" required placeholder="体重" emptyTips="请输入体重(公斤)">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">UGE<sub>240min</sub>(mmol)</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="uge" required placeholder="UGE" emptyTips="请输入UGE">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">eGFR(mL/min/1.73m<sup>2</sup>)</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="egfr" required placeholder="eGFR" emptyTips="请输入eGFR">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd">
-                            <label class="weui-label">时间</label>
-                        </div>
-                        <div class="weui-cell__bd">
-                            <label class="weui-input">血糖浓度(mmol/L)</label>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">0 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood0" required placeholder="0min血糖浓度" emptyTips="请输入0min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">30 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood30" required placeholder="30min血糖浓度" emptyTips="请输入30min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">60 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood60" required placeholder="60min血糖浓度" emptyTips="请输入60min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">90 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood90" required placeholder="90min血糖浓度" emptyTips="请输入90min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">120 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood120" required placeholder="120min血糖浓度" emptyTips="请输入120min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">180 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood180" required placeholder="180min血糖浓度" emptyTips="请输入180min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd"><label class="weui-label">240 min</label></div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" id="blood240" required placeholder="240min血糖浓度" emptyTips="请输入240min血糖浓度">
-                        </div>
-                        <div class="weui-cell__ft">
-                            <i class="weui-icon-warn"></i>
-                        </div>
-                    </div>
+          <div id="form">
+            <div class="weui-cells weui-cells_form" id="form-container">
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">身高(cm)</label>
                 </div>
-                <div class="weui-btn-area">
-                    <a id="formSubmitBtn" href="javascript:" class="weui-btn weui-btn_primary">计算</a>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number" step="any"
+                    id="height"
+                    required
+                    placeholder="身高"
+                    emptyTips="请输入身高(厘米)"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">体重(kg)</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number" step="any"
+                    id="weight"
+                    required
+                    placeholder="体重"
+                    emptyTips="请输入体重(公斤)"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">UGE<sub>240min</sub></label>
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number" step="any"
+                    id="uge"
+                    required
+                    placeholder="UGE"
+                    emptyTips="请输入UGE"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+                <div
+                  class="weui-cell_select"
+                  style="display: flex; align-items: center;"
+                >
+                  <div class="weui-cell__hd">
+                    <label for="">单位</label>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <select class="weui-select" id="ugeUnit" name="select">
+                      <option value="mmol">mmol</option>
+                      <option value="g">g</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label"
+                    >eGFR(mL/min/1.73m<sup>2</sup>)</label
+                  >
+                </div>
+                <div class="weui-cell__bd">
+                  <input
+                    class="weui-input"
+                    type="number" step="any"
+                    id="egfr"
+                    required
+                    placeholder="eGFR"
+                    emptyTips="请输入eGFR"
+                  />
+                </div>
+                <div class="weui-cell__ft">
+                  <i class="weui-icon-warn"></i>
+                </div>
+              </div>
+              <div class="weui-cell">
+                <div class="weui-cell__hd">
+                  <label class="weui-label">时间</label>
+                </div>
+                <div class="weui-cell__bd">
+                  <label class="weui-input">血糖浓度</label>
+                </div>
+                <div
+                  class="weui-cell_select"
+                  style="display: flex; align-items: center;"
+                >
+                  <div class="weui-cell__hd">
+                    <label for="">单位</label>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <select class="weui-select" id="gfrUnit" name="select">
+                      <option value="mmol/L">mmol/L</option>
+                      <option value="mg/dl">mg/dl</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="time-row">
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="0"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(0min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="30"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(30min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="60"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(60min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="90"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(90min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="120"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(120min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="180"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(180min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+                <div class="weui-cell">
+                  <div class="weui-cell__hd">
+                    <div class="weui-cell__hd">
+                      <label class="weui-label">
+                        <input
+                          class="weui-input label-input"
+                          type="number" step="any"
+                          value="240"
+                          readonly
+                        />
+                        min
+                      </label>
+                    </div>
+                  </div>
+                  <div class="weui-cell__bd">
+                    <input
+                      class="weui-input blood-input"
+                      type="number" step="any"
+                      placeholder="血糖浓度(240min)"
+                    />
+                  </div>
+                  <div class="weui-cell__ft">
+                    <i class="weui-icon-warn"></i>
+                  </div>
+                </div>
+              </div>
+                <div class="weui-cell tool-bar">
+                  <div class="weui-cell__ft">
+                    <a href="advanced_zh.html" class="weui-footer__link">
+                      使用其他时间点
+                    </a>
+                  </div>
                 </div>
             </div>
+
+            <div class="weui-btn-area">
+              <a
+                id="formSubmitBtn"
+                href="javascript:"
+                class="weui-btn weui-btn_primary"
+                >计算</a
+              >
+            </div>
+          </div>
         </div>
-        <div class="page__ft" style="text-align: center">
+        <div class="page__ft" id="page__ft" style="text-align: center">
             <h2 id="result" class="page__desc"></h2>
         </div>
         <div class="weui-footer">
-            <p class="weui-footer__links">
-                <a href="https://rtg.renaltubule.com" target="_blank" class="weui-footer__link">本服务由北京协和医院 陈丽萌实验室提供</a>
-                <a href="肾糖阈测定流程及数据收集表.pdf" target="_blank" class="weui-footer__link">测定流程及数据收集表格</a>
-            </p>
+          <p class="weui-footer__links">
+            <a
+              href="https://rtg.renaltubule.com"
+              target="_blank"
+              class="weui-footer__link"
+              >本服务由北京协和医院 陈丽萌实验室提供</a
+            >
+            <a
+              href="肾糖阈测定流程及数据收集表.pdf"
+              target="_blank"
+              class="weui-footer__link"
+              >测定流程及数据收集表格</a
+            >
+          </p>
         </div>
+      </div>
     </div>
-</div>
-<script rel="script">
-    weui.form.checkIfBlur('#form');
 
-    document.querySelector('#formSubmitBtn').addEventListener('click', function () {
-        weui.form.validate('#form', function (error) {
+    <script rel="script">
+      weui.form.checkIfBlur('#form');
+
+      var createElement = function(type, props) {
+        var $e = document.createElement(type);
+        for (var prop in props) {
+          $e.setAttribute(prop, props[prop]);
+        }
+        return $e;
+      }
+
+      var removeRow = (element) => {
+        element.parentElement.parentElement.parentElement.removeChild(element.parentElement.parentElement);
+      }
+
+      var addRow = () => {
+        //创建行容器
+        var newWeUiCell = createElement('div', {class: 'weui-cell'});
+        //创建label及time input
+        var newWeUiCellHd1 = createElement('div', {class: 'weui-cell__hd'});
+        newWeUiCellHd1.setAttribute('class', 'weui-cell__hd');
+        var newWeUiCellLabel = createElement('label', {class: 'weui-label'});
+        newWeUiCellLabel.appendChild(createElement('input', {class: 'weui-input label-input', placeholder: 'time', type: 'number'}));
+        newWeUiCellLabel.appendChild(document.createTextNode('min'));
+
+        newWeUiCellHd1.appendChild(newWeUiCellLabel);
+        //创建gfr input
+        var newWeUiCellHd2 = createElement('div', {class: 'weui-cell__bd'});
+
+        newWeUiCellHd2.appendChild(createElement('input', {class: 'weui-input blood-input', type: 'number', placeholder: '血糖浓度', emptyTips: '血糖浓度'}));
+
+        var newWeuiCellHd3 = createElement("div", {class: "weui-cell__ft"} );
+        newWeuiCellHd3.appendChild(createElement("i", {class: "weui-icon-cancel", onclick: "removeRow(this)"}));
+        newWeuiCellHd3.appendChild(createElement("i", {class: "weui-icon-warn"}));
+
+        newWeUiCell.appendChild(newWeUiCellHd1);
+        newWeUiCell.appendChild(newWeUiCellHd2);
+        newWeUiCell.appendChild(newWeuiCellHd3);
+        document.getElementById('time-row').appendChild(newWeUiCell);
+      };
+
+      var displayImage = (url) => {
+        var imageDiv = document.getElementById('image-div');
+        if (!imageDiv) {
+          //如果没有图片容器，开始新建图片容器， 图片容器分外层和内层，这样容易控制内层居中
+          var formContainer = document.getElementById('page__ft');
+          var imageDiv = document.createElement('div');
+          imageDiv.setAttribute('id', 'image-div-out');
+          imageDiv.style.width = '100%'; //可改外层容器宽度
+          imageDiv.style.height = '500px'; //可改外层容器高度
+          imageDiv.style.display = 'flex'; //让内层容器居中
+          imageDiv.style.alignItems = 'center';
+          imageDiv.style.justifyContent = 'center';
+          var imageContainer = document.createElement('div'); //创建内层容器
+          imageContainer.setAttribute('id', 'image-div');
+          imageContainer.style.width = '640px'; //设置内层容器宽度
+          imageContainer.style.height = '480px'; //设置内层容器高度
+          imageContainer.style.backgroundImage = 'url(' + url + ')'; //设置图片路径
+          imageDiv.appendChild(imageContainer);
+          formContainer.appendChild(imageDiv);
+        } else {
+          imageDiv.style.backgroundImage = 'url(' + url + ')'; //设置图片路径
+        }
+      };
+
+      document
+        .querySelector('#formSubmitBtn')
+        .addEventListener('click', function () {
+          weui.form.validate('#form', function (error) {
             console.log(error);
             if (!error) {
-                var loading = weui.loading('提交中...');
-                var uge = parseFloat(document.getElementById('uge').value);
-                var egfr = parseFloat(document.getElementById('egfr').value);
-                var height = parseFloat(document.getElementById('height').value);
-                var weight = parseFloat(document.getElementById('weight').value);
-                var blood = [];
-                blood.push(parseFloat(document.getElementById('blood0').value));
-                blood.push(parseFloat(document.getElementById('blood30').value));
-                blood.push(parseFloat(document.getElementById('blood60').value));
-                blood.push(parseFloat(document.getElementById('blood90').value));
-                blood.push(parseFloat(document.getElementById('blood120').value));
-                blood.push(parseFloat(document.getElementById('blood180').value));
-                blood.push(parseFloat(document.getElementById('blood240').value));
-                fetch('/rtg', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        height: height,
-                        weight: weight,
-                        gfr: egfr,
-                        uge: uge,
-                        x: [0.0,30.0,60.0,90.0,120.0,180.0,240.0],
-                        y: blood
-                    })
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (json) {
-                    if (json.length != 1) {
-                        document.getElementById('result').innerHTML="计算出错!";
-                    } else {
-                        document.getElementById('result').innerHTML="肾糖阈估算值:"+new Number(json[0]).toFixed(2)+"mmol/L";
+              //收集time和glucose数据,手动处理错误，其他错误交给weui托管
+              var blood = [];
+              var time = [];
+              var timeList = document.querySelectorAll('.label-input');
+              var bloodList = document.querySelectorAll('.blood-input');
+              for (let i = 0; i < bloodList.length; i++) {
+                if (bloodList[i].value) {
+                  blood.push(parseFloat(bloodList[i].value));
+                }
+              }
+              for (let j = 0; j < timeList.length; j++) {
+                if (timeList[j].value) {
+                  time.push(parseFloat(timeList[j].value));
+                }
+              }
+              //如果以上数据有空值，返回错误提示
+              if (
+                blood.length !== time.length ||
+                blood.length !== bloodList.length ||
+                time.length !== timeList.length
+              ) {
+                weui.topTips('时间或血糖浓度有误', {
+                  duration: 3000,
+                  className: 'blood-err-tip',
+                  callback: function () {
+                    console.log('Time', time);
+                    console.log('blood', blood);
+                  },
+                });
+                return false;
+              }
+              //通过检测，向后端发送数据，并展示loading状态
+              var loading = weui.loading('提交中...');
+              var uge = parseFloat(document.getElementById('uge').value);
+              var egfr = parseFloat(document.getElementById('egfr').value);
+              var height = parseFloat(document.getElementById('height').value);
+              var weight = parseFloat(document.getElementById('weight').value);
+              var ugeUnit = document.getElementById('ugeUnit').value;
+              var gfrUnit = document.getElementById('gfrUnit').value;
+              fetch('/rtg', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  height: height,
+                  weight: weight,
+                  gfr: egfr,
+                  gfrUnit: gfrUnit,
+                  ugeUnit: ugeUnit,
+                  uge: uge,
+                  x: time,
+                  y: blood,
+                }),
+              })
+                .then(function (response) {
+                  return response.json();
+                })
+                .then(function (json) {
+                  if (json.length != 1) {
+                    document.getElementById('result').innerHTML =
+                      '计算出错!';
+                    var imageDivOut = document.getElementById("image-div-out");
+                    if(imageDivOut){
+                      document.getElementById('page__ft').removeChild(imageDivOut)
                     }
-                    window.scrollTo(0,document.body.scrollHeight);
-                    loading.hide();
+                  } else {
+                    var { value, url } = json[0];
+                    console.log(json);
+                    document.getElementById('result').innerHTML="肾糖阈估算值: "+new Number(value).toFixed(2)+gfrUnit;
+                    displayImage(url);
+                  }
+                  window.scrollTo(0, document.body.scrollHeight);
+                  loading.hide();
                 });
             }
+          });
         });
-    });
-</script>
-</body>
+    </script>
+  </body>
 </html>
