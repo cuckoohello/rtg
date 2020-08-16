@@ -1,5 +1,5 @@
 FROM alpine:3
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && apk add --update --no-cache tzdata py3-numpy py3-scipy py3-pip
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories && apk add --update --no-cache tzdata py3-numpy py3-scipy py3-pip py3-matplotlib
 ENV TZ Asia/Shanghai
 
 WORKDIR /app
